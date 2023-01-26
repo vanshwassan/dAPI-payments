@@ -12,5 +12,12 @@
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "hardhat": "^2.12.6",
     "hardhat-deploy": "^0.11.22"
+  },
+  "scripts": {
+    "compile": "yarn hardhat compile",
+    "deploy": "yarn hardhat deploy --network mumbai",
+    "sendPayment": "yarn hardhat run scripts/sendPayment.js --network mumbai",
+    "checkReceipt": "yarn hardhat run scripts/checkReceipt.js --network mumbai",
+    "withdraw": "yarn hardhat run scripts/withdrawFunds.js --network mumbai"
   }
 }
