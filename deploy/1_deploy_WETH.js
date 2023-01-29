@@ -1,7 +1,7 @@
 const hre = require('hardhat');
 
 module.exports = async function() {
-  // Deploy Dapp Token
+  // Deploy WETH Token
     const WETH = await hre.deployments.deploy('WETH', {
         from: (await hre.getUnnamedAccounts())[0],
     } );

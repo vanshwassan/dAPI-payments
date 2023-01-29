@@ -10,10 +10,19 @@ async function main() {
   );
   const WETH = await hre.deployments.get("WETH");
   const WETHAddress = WETH.address;
-// Stake 2.5 ETH
+
+  const WMATIC = await hre.deployments.get("WMATIC");
+  const WMATICAddress = WMATIC.address;
+
+// Send 2.5 WETH
   const Pay = await paymentsContract.Payment(WETHAddress, '2500000000000000000');
   await Pay.wait();
-  console.log("Payment made!");
+  console.log("WETH Payment made!");
+
+// Send 2.5 WMATIC
+  const Pay2 = await paymentsContract.Payment(WMATICAddress, '2500000000000000000');
+  await Pay2.wait();
+  console.log("WMATIC Payment made!");
 
 }
   main()

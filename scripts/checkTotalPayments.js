@@ -10,8 +10,8 @@ async function main() {
   );
 
   // Send in your Payment's Receipt ID
-  const CheckR = await paymentsContract.checkReceipt('2');
-  console.log(CheckR);
+  const totalPayments = await paymentsContract.getTotalPayments();
+  console.log(totalPayments);
 
 }
   main()

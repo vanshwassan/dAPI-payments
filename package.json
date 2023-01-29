@@ -18,6 +18,7 @@
     "deploy": "yarn hardhat deploy --network mumbai",
     "sendPayment": "yarn hardhat run scripts/sendPayment.js --network mumbai",
     "checkReceipt": "yarn hardhat run scripts/checkReceipt.js --network mumbai",
+    "checkTotalPayments": "yarn hardhat run scripts/checkTotalPayments.js --network mumbai",
     "withdraw": "yarn hardhat run scripts/withdrawFunds.js --network mumbai"
   }
 }
