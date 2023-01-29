@@ -26,21 +26,13 @@ constructor(address _dapiServer, address _ERC20Address) DapiReader(_dapiServer) 
         tokenDapiMapping[token] = DapiName;
     }
 
-    function getTokenPrice(address token) public view returns (int224 value) {
+    function getTokenPrice(address token) public view returns (uint256 tokenPriceUint256) {
         bytes32 DapiName = tokenDapiMapping[token];
-        (value) = IDapiServer(dapiServer).readDataFeedValueWithDapiName(
+        int224 value = IDapiServer(dapiServer).readDataFeedValueWithDapiName(
                 DapiName
         );
-    }
-
-    function int224ToUint256(address token)
-        public
-        view
-        returns (uint256)
-    {
-        int224 tokenPrice = (getTokenPrice(token));
-        uint224 tokenPriceUint224 = uint224(tokenPrice);
-        uint256 tokenPriceUint256 = tokenPriceUint224;
+        uint224 tokenPriceUint224 = uint224(value);
+        tokenPriceUint256 = tokenPriceUint224;
         return tokenPriceUint256;
     }
 
@@ -55,7 +47,7 @@ constructor(address _dapiServer, address _ERC20Address) DapiReader(_dapiServer) 
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         uint256 decimals = _ERC20.decimals();
-        uint256 _usdValue = (int224ToUint256(token) * _tokenAmount)/10**decimals;
+        uint256 _usdValue = (getTokenPrice(token) * _tokenAmount)/10**decimals;
         _ERC20.transferFrom(msg.sender, address(this), _tokenAmount);
         _safeMint(msg.sender, tokenId);
         uint256 receipt = makeReceipt(tokenId, _usdValue);
