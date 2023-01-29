@@ -11,7 +11,7 @@ async function main() {
   const WETH = await hre.deployments.get("WETH");
   const WETHAddress = WETH.address;
 // Stake 2.5 ETH
-  const Withdraw = await paymentsContract.ownerWithdrawWETH();
+  const Withdraw = await paymentsContract.ownerWithdrawFunds();
   await Withdraw.wait();
   console.log("Withdrawal made!");
 

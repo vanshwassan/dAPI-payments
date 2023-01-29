@@ -3,7 +3,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@api3/airnode-protocol-v1/contracts/dapis/DapiReader.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract Payments is ERC721, DapiReader, Ownable {
@@ -11,12 +11,12 @@ contract Payments is ERC721, DapiReader, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    IERC20 public WETH;
+    ERC20 public _ERC20;
     mapping(address => bytes32) public tokenDapiMapping;
     mapping(uint256 => uint256) public TokenIDtoPrice; 
 
-constructor(address _dapiServer, address _WETHAddress) DapiReader(_dapiServer) ERC721("Payment Receipt", "PRT") {
-        WETH = IERC20(_WETHAddress);
+constructor(address _dapiServer, address _ERC20Address) DapiReader(_dapiServer) ERC721("Payment Receipt", "PRT") {
+        _ERC20 = ERC20(_ERC20Address);
     }
 
     function setDapiName(address token, bytes32 DapiName)
@@ -35,24 +35,15 @@ constructor(address _dapiServer, address _WETHAddress) DapiReader(_dapiServer) E
 
     function int224ToUint256(address token)
         public
-        view 
-        returns (uint256)
-    {
-        int224 tokenPrice = (getTokenPrice(token));
-        uint224 newTokenPrice = uint224(tokenPrice);
-        return newTokenPrice;
-
-    }
-
-    function getEthValue(address token)
-        public
         view
         returns (uint256)
     {
-        uint256 newTokenPrice = (int224ToUint256(token));
-        return
-            (newTokenPrice);
+        int224 tokenPrice = (getTokenPrice(token));
+        uint224 tokenPriceUint224 = uint224(tokenPrice);
+        uint256 tokenPriceUint256 = tokenPriceUint224;
+        return tokenPriceUint256;
     }
+
 
     function makeReceipt(uint256 tokenId, uint256 price) internal returns (uint256) {
         TokenIDtoPrice[tokenId] = price;
@@ -63,8 +54,9 @@ constructor(address _dapiServer, address _WETHAddress) DapiReader(_dapiServer) E
     function Payment(address token, uint256 _tokenAmount) public returns(uint256) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        uint256 _usdValue = (getEthValue(token) * _tokenAmount)/10**18;
-        WETH.transferFrom(msg.sender, address(this), _tokenAmount);
+        uint256 decimals = _ERC20.decimals();
+        uint256 _usdValue = (int224ToUint256(token) * _tokenAmount)/10**decimals;
+        _ERC20.transferFrom(msg.sender, address(this), _tokenAmount);
         _safeMint(msg.sender, tokenId);
         uint256 receipt = makeReceipt(tokenId, _usdValue);
         return receipt;
@@ -77,11 +69,11 @@ constructor(address _dapiServer, address _WETHAddress) DapiReader(_dapiServer) E
     
     // Function to get the total payments
     function getTotalPayments() view public returns(uint) {
-        uint256 totalPayments = WETH.balanceOf(address(this));
+        uint256 totalPayments = _ERC20.balanceOf(address(this));
         return totalPayments;
     }
 
-    function ownerWithdrawWETH() public onlyOwner {
-        WETH.transfer(msg.sender, WETH.balanceOf(address(this)));
+    function ownerWithdrawFunds() public onlyOwner {
+        _ERC20.transfer(msg.sender, _ERC20.balanceOf(address(this)));
     }
 }
