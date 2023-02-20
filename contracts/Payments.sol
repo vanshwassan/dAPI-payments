@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
+
+/// @title dApp to accept ERC20 token payments and mint an NFT receipt with the USD value to the user.
+/// @author @vanshwassan
+
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@api3/airnode-protocol-v1/contracts/dapis/DapiReader.sol";
@@ -19,18 +23,19 @@ contract Payments is ERC721, DapiReader, Ownable {
 constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt", "PRT") {
 
     }
-    // @dev set dAPI names for tokens
+    /// @notice set dAPI names for added tokens
+    /// @dev dAPI names are required to be converted to bytes32
     function setDapiName(address token, bytes32 DapiName)
         public
         onlyOwner
     {
         tokenDapiMapping[token] = DapiName;
     }
-    // @dev add allowed tokens
+    /// @notice add allowed tokens
     function addAllowedTokens(address token) public onlyOwner {
         allowedTokens.push(token);
     }
-    // @dev check if token is allowed
+    /// @notice check if token is allowed
     function tokenIsAllowed(address token) public view returns (bool) {
         for (uint256 i = 0; i < allowedTokens.length; i++) {
             if (allowedTokens[i] == token) {
@@ -39,7 +44,7 @@ constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt
         }
         return false;
     }
-    // @dev get token price from dAPI name
+    /// @notice get token price from dAPI name
     function getTokenPrice(address token) public view returns (uint256 tokenPriceUint256) {
         bytes32 DapiName = tokenDapiMapping[token];
         int224 value = IDapiServer(dapiServer).readDataFeedValueWithDapiName(
@@ -50,13 +55,13 @@ constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt
         return tokenPriceUint256;
     }
 
-    // @dev make the receipt
+    /// @notice make the receipt
     function makeReceipt(uint256 tokenId, uint256 price) internal returns (uint256) {
         TokenIDtoPrice[tokenId] = price;
         return (price);
     }
 
-    // @dev make the payment
+    /// @notice make the payment
     function Payment(address token, uint256 _tokenAmount) public returns(uint256) {
         require(_tokenAmount > 0, "amount cannot be 0");
         require(tokenIsAllowed(token), "token not allowed");
@@ -72,12 +77,12 @@ constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt
     }
     }
 
-    // @dev check receipt withn tokenId
+    /// @notice check receipt withn tokenId
     function checkReceipt(uint256 tokenId) public view returns (uint256) {
         return (TokenIDtoPrice[tokenId]);
     }
     
-    // @dev get all payments in USD
+    /// @notice get all payments in USD
     function getTotalPayments() public view returns(uint256) {
         uint256 balance = 0;
         for (uint256 i = 0; i < allowedTokens.length; i++) {
@@ -87,7 +92,7 @@ constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt
         }
         return balance;
     }
-    // @dev onlyOwner withdraw all tokens
+    /// @notice onlyOwner withdraw all tokens
     function ownerWithdrawFunds() public onlyOwner {
         for (uint256 i = 0; i < allowedTokens.length; i++) {
             ERC20(allowedTokens[i]).transfer(msg.sender, ERC20(allowedTokens[i]).balanceOf(address(this)));
