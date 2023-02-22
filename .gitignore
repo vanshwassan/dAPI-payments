@@ -1,3 +1,7 @@
 yarn.lock
 /node_modules
 credentials.json
+credentials.example.json
+/deployments
+/artifacts
+/cache
