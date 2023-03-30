@@ -8,13 +8,11 @@ module.exports = async () => {
   const WETHAddress = WETH.address;
   const WMATICAddress = WMATIC.address;
 
-  const ethUsdBytes32 = "0x4554482f55534400000000000000000000000000000000000000000000000000";
-  const maticUsdBytes32 = "0x4d415449432f5553440000000000000000000000000000000000000000000000";
-
-    const dapiServerAddress = "0x71Da7A936fCaEd1Ee364Df106B12deF6D1Bf1f14";
+  const ethUsdProxyContract = "0x26690F9f17FdC26D419371315bc17950a0FC90eD";
+  const maticUsdProxyContract = "0x3ACccB328Db79Af1B81a4801DAf9ac8370b9FBF8";
 
     const PaymentsContract = await hre.deployments.deploy("Payments", {
-      args: [dapiServerAddress],
+      args: [],
       from: (await hre.getUnnamedAccounts())[0],
       log: true,
     });
@@ -36,11 +34,11 @@ module.exports = async () => {
   console.log(`Wrapped Matic added to allowed tokens!`);
 
     // Set DAPIs
-    const setWETHDapi = await paymentsContract.setDapiName(WETHAddress, ethUsdBytes32);
+    const setWETHDapi = await paymentsContract.setDapiProxy(WETHAddress, ethUsdProxyContract);
     await setWETHDapi.wait();
     console.log(`DAPI set for Wrapped ETH`);
 
-    const setWMATICDapi = await paymentsContract.setDapiName(WMATICAddress, maticUsdBytes32);
+    const setWMATICDapi = await paymentsContract.setDapiProxy(WMATICAddress, maticUsdProxyContract);
     await setWMATICDapi.wait();
     console.log(`DAPI set for Wrapped Matic`);
 

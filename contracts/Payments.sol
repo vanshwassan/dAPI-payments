@@ -6,30 +6,29 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@api3/airnode-protocol-v1/contracts/dapis/DapiReader.sol";
+import "@api3/contracts/v0.8/interfaces/IProxy.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract Payments is ERC721, DapiReader, Ownable {
+contract Payments is ERC721, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
 
     ERC20 public _ERC20;
-    mapping(address => bytes32) public tokenDapiMapping;
+    mapping(address => address) public tokenProxyMapping;
     mapping(uint256 => uint256) public TokenIDtoPrice; 
     address[] allowedTokens;
 
-constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt", "PRT") {
+constructor() ERC721("Payment Receipt", "PRT") {
 
     }
-    /// @notice set dAPI names for added tokens
-    /// @dev dAPI names are required to be converted to bytes32
-    function setDapiName(address token, bytes32 DapiName)
+    /// @notice set dAPI proxy for added tokens
+    function setDapiProxy(address token, address _proxy)
         public
         onlyOwner
     {
-        tokenDapiMapping[token] = DapiName;
+        tokenProxyMapping[token] = _proxy;
     }
     /// @notice add allowed tokens
     function addAllowedTokens(address token) public onlyOwner {
@@ -44,15 +43,14 @@ constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt
         }
         return false;
     }
-    /// @notice get token price from dAPI name
+    /// @notice get token price from dAPI Proxy
     function getTokenPrice(address token) public view returns (uint256 tokenPriceUint256) {
-        bytes32 DapiName = tokenDapiMapping[token];
-        int224 value = IDapiServer(dapiServer).readDataFeedValueWithDapiName(
-                DapiName
-        );
+        address proxy = tokenProxyMapping[token];
+        int224 value;
+        uint256 timestamp;
+        (value, timestamp) = IProxy(proxy).read();
         uint224 tokenPriceUint224 = uint224(value);
         tokenPriceUint256 = tokenPriceUint224;
-        return tokenPriceUint256;
     }
 
     /// @notice make the receipt
@@ -69,7 +67,8 @@ constructor(address _dapiServer) DapiReader(_dapiServer) ERC721("Payment Receipt
             uint256 tokenId = _tokenIdCounter.current();
             _tokenIdCounter.increment();
             uint256 decimals = ERC20(token).decimals();
-            uint256 _usdValue = (getTokenPrice(token) * _tokenAmount)/10**decimals;
+            uint256 tokenPriceUint256 = getTokenPrice(token);
+            uint256 _usdValue = (tokenPriceUint256 * _tokenAmount)/10**decimals;
             ERC20(token).transferFrom(msg.sender, address(this), _tokenAmount);
             _safeMint(msg.sender, tokenId);
             uint256 receipt = makeReceipt(tokenId, _usdValue);
