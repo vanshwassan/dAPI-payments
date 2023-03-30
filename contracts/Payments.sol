@@ -82,7 +82,7 @@ constructor() ERC721("Payment Receipt", "PRT") {
     }
     
     /// @notice get all payments in USD
-    function getTotalPayments() public view returns(uint256) {
+    function getContractBalance() public view returns(uint256) {
         uint256 balance = 0;
         for (uint256 i = 0; i < allowedTokens.length; i++) {
             uint256 tokenTokenBalance = ERC20(allowedTokens[i]).balanceOf(address(this));
