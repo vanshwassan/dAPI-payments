@@ -10,7 +10,7 @@ async function main() {
   );
 
   // Send in your Payment's Receipt ID
-  const totalPayments = await paymentsContract.getTotalPayments();
+  const totalPayments = await paymentsContract.getContractBalance();
   console.log(totalPayments);
 
 }
