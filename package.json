@@ -6,11 +6,20 @@
   "license": "MIT",
   "dependencies": {
     "@api3/airnode-protocol": "^0.9.2",
-    "@api3/airnode-protocol-v1": "^0.8.0",
+    "@api3/airnode-protocol-v1": "^2.1.0",
+    "@api3/contracts": "^0.6.0",
     "@api3/operations": "^0.0.1-3bd7c9d51d4020468d5d85409b6a23d81284e3e1",
     "@nomiclabs/hardhat-ethers": "^2.2.2",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "hardhat": "^2.12.6",
     "hardhat-deploy": "^0.11.22"
+  },
+  "scripts": {
+    "compile": "yarn hardhat compile",
+    "deploy": "yarn hardhat deploy --network mumbai",
+    "sendPayment": "yarn hardhat run scripts/sendPayment.js --network mumbai",
+    "checkReceipt": "yarn hardhat run scripts/checkReceipt.js --network mumbai",
+    "checkTotalPayments": "yarn hardhat run scripts/checkTotalPayments.js --network mumbai",
+    "withdraw": "yarn hardhat run scripts/withdrawFunds.js --network mumbai"
   }
 }
