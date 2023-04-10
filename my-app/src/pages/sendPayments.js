@@ -20,8 +20,8 @@ export default function Form(props) {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [contract, setContract] = useState(null);
-  const [sendBtnText, setSendBtnText] = useState('Approve');
-  const ABI = require('./abi/WETH.json');
+  const [sendBtnText, setSendBtnText] = useState('Send Payment');
+  const ERC20ABI = require('./abi/WETH.json');
 
   const setWeth = async => {
     const token = "0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6";
@@ -46,7 +46,7 @@ export default function Form(props) {
 
     console.log(signer)
 
-    let contract = new ethers.Contract(token, ABI, signer);
+    let contract = new ethers.Contract(token, ERC20ABI, signer);
     setContract(contract);
     console.log("Contract Loaded Successfully")
 
@@ -59,7 +59,8 @@ export default function Form(props) {
     }
   };
 
-  const sendPayment = async (token) => {
+  const sendPayment = async (e) => {
+    e.preventDefault();
     console.log("Sending Payment");
     let tempProvider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(tempProvider);
@@ -69,16 +70,19 @@ export default function Form(props) {
     console.log("Signer set successfully")
 
     console.log(signer)
-
-    let contract = new ethers.Contract(token, ABI, signer);
+    const PaymentsContractAddress = "0x1D982184951f7A1C819a1eD6879C14af0Aa83cD7";
+    const PaymentsABI = require('./abi/Payments.json');
+    let contract = new ethers.Contract(PaymentsContractAddress, PaymentsABI, signer);
     setContract(contract);
-    console.log("Contract Loaded Successfully")
+    console.log("Payments Contract Loaded Successfully")
 
-    let transferAmount = document.getElementById('sendamount').value;
+    let amount = e.target.sendamount.value;
+    const transferAmount = ethers.utils.parseEther(amount);
+    console.log(transferAmount)
     try {
-      const transfer = await contract.transfer('0x1D982184951f7A1C819a1eD6879C14af0Aa83cD7', transferAmount, { gasLimit: 1000000 });
-      await transfer.wait();
-      console.log("Transfer Successful")
+      const pay = await contract.Payment('0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6', transferAmount, { gasLimit: 1000000 });
+      await pay.wait();
+      console.log("Payment made to the contract!")
     } catch (err) {
       console.error(err);
     }
@@ -110,13 +114,15 @@ export default function Form(props) {
               <Button colorScheme='blue' onClick={(setWmatic)}>WMATIC</Button>
               </Stack>
             </FormControl>
+            </form>
+            <form onSubmit={sendPayment}>
             <FormControl mt={6}>
               <FormLabel>Enter the amount</FormLabel>
               <Input type="number" id='sendamount'/>
+              <Button width="full" mt={4} type="submit">
+                { sendBtnText }
+              </Button>
             </FormControl>
-            <Button width="full" mt={4} type="submit" onClick={sendPayment}>
-            { sendBtnText }
-            </Button>
           </form>
         </Box>
             </Box>
