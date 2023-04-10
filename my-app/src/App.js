@@ -30,7 +30,6 @@ function App() {
 
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
-  const [contract, setContract] = useState(null);
 
   const connectWalletHandler = () => {
     if (window.ethereum) {
