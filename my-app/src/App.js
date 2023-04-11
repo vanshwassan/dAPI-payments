@@ -31,34 +31,23 @@ function App() {
 
   const connectWalletHandler = () => {
     if (window.ethereum) {
+      if (window.ethereum.networkVersion !== '80001') {
+        alert('Please connect to Polygon Mumbai Testnet');
+        return;
+      } else {
       window.ethereum
         .request({ method: 'eth_requestAccounts' })
         .then((accounts) => {
-          accountChangeHandler(accounts[0]);
+          setDefaultAccount(accounts[0]);
           setConnectButtonText(accounts[0]);
         })
         .catch((error) => {
           setErrorMessage(error.message);
         });
-    } else {
+    }} else {
       setErrorMessage('Please install MetaMask!');
     }
   };
-
-  const accountChangeHandler = (newAccount) => {
-    if (window.ethereum) {
-      window.ethereum.request({ method: 'eth_requestAccounts' });
-      setDefaultAccount(newAccount);
-      updateEthers();
-    }}
-
-  const updateEthers = () => {
-    let tempProvider = new ethers.providers.Web3Provider(window.ethereum);
-    setProvider(tempProvider);
-
-    let tempSigner = tempProvider.getSigner();
-    setSigner(tempSigner);
-  }
 
   return (
     <ChakraProvider theme={theme}>

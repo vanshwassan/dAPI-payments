@@ -69,6 +69,10 @@ export default function Form(props) {
 
   const sendPayment = async (e) => {
     e.preventDefault();
+    if (token == null) {
+      alert("Please Select a Token and Approve the Spending Limit");
+      return;
+    } else {
     console.log("Sending Payment");
     let tempProvider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(tempProvider);
@@ -93,7 +97,7 @@ export default function Form(props) {
       console.log("Payment made to the contract!")
     } catch (err) {
       console.error(err);
-    }
+    }}
   }
 
     return (
