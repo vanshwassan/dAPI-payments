@@ -26,8 +26,6 @@ function App() {
   const [defaultAccount, setDefaultAccount] = useState(null);
   const [ConnectButtonText, setConnectButtonText] = useState('Connect Wallet');
 
-  const [currentContractValue, setCurrentContractValue] = useState(null);
-
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
 
@@ -68,7 +66,7 @@ function App() {
         <Grid p={7}>
         <HStack spacing='28px' justifyContent="right">
           <ColorModeSwitcher />
-          <Button onClick={connectWalletHandler}>{ConnectButtonText} </Button>
+          <Button onClick={connectWalletHandler}> {ConnectButtonText} </Button>
           {errorMessage}
           </HStack>
           <VStack spacing={8}>

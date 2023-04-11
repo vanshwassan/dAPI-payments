@@ -15,23 +15,31 @@ import { ethers } from 'ethers';
 // import { WMATICabi } from './abi/WMATIC.json';
 
 export default function Form(props) {
-  // var [token, setToken] = useState("0x0000000000000000000000000000000000000000");
-  const [amount, setAmount] = useState(null);
+  const [token, setToken] = useState(null);
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [contract, setContract] = useState(null);
   const [sendBtnText, setSendBtnText] = useState('Send Payment');
   const ERC20ABI = require('./abi/WETH.json');
 
-  const setWeth = async => {
-    const token = "0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6";
+  const setTokenHandler = async (e) => {
+    e.preventDefault();
+    console.log("Setting Token");
+    const token = e.target.value;
+    setToken(token);
     console.log(token)
     PaymentsHandler(token);
   }
-  const setWmatic = async => {
-    const token = "0xf12Fd06B008739F18732F972782375DDBa1c3527";
-    PaymentsHandler(token);
-  }
+
+  // const setWeth = async => {
+  //   const token = "0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6";
+  //   console.log(token)
+  //   PaymentsHandler(token);
+  // }
+  // const setWmatic = async => {
+  //   const token = "0xf12Fd06B008739F18732F972782375DDBa1c3527";
+  //   PaymentsHandler(token);
+  // }
 
 
   const PaymentsHandler = async (token) => {
@@ -80,24 +88,13 @@ export default function Form(props) {
     const transferAmount = ethers.utils.parseEther(amount);
     console.log(transferAmount)
     try {
-      const pay = await contract.Payment('0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6', transferAmount, { gasLimit: 1000000 });
+      const pay = await contract.Payment(token, transferAmount, { gasLimit: 1000000 });
       await pay.wait();
       console.log("Payment made to the contract!")
     } catch (err) {
       console.error(err);
     }
   }
-
-  // const sendPaymentHandler = async () => {
-  //   let tempProvider = new ethers.providers.Web3Provider(window.ethereum);
-  //   setProvider(tempProvider);
-
-
-  //   let contract = new ethers.Contract({ token }, ABI, signer);
-  //   setContract(contract);
-  //   const tx = await contract.approve(signer.getAddress(), '10000000000000000000');
-  //   await tx.wait();
-  // }
 
     return (
         <Flex width="full" align="center" justifyContent="center">
@@ -110,8 +107,8 @@ export default function Form(props) {
             <FormControl>
               <FormLabel>Select token to pay</FormLabel>
               <Stack direction='row' spacing={4} align='center'>
-              <Button colorScheme='blue' onClick={(setWeth)}>WETH</Button>
-              <Button colorScheme='blue' onClick={(setWmatic)}>WMATIC</Button>
+              <Button colorScheme='blue' value={'0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6'} onClick={e => setTokenHandler(e, "value")}>WETH</Button>
+              <Button colorScheme='blue' value={'0xf12Fd06B008739F18732F972782375DDBa1c3527'} onClick={e => setTokenHandler(e, "value")}>WMATIC</Button>
               </Stack>
             </FormControl>
             </form>
