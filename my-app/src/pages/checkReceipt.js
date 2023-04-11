@@ -58,7 +58,7 @@ export default function Check(props) {
           <form onSubmit={checkReceipt}>
             <FormControl mt={6}>
               <FormLabel>Enter the TokenID</FormLabel>
-              <Input type="text" id='tokenid'/>
+              <Input type="text" id='tokenid' required/>
             </FormControl>
             <Button width="full" mt={4} type="submit">
               Check

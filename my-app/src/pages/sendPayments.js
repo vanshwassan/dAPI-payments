@@ -47,7 +47,6 @@ export default function Form(props) {
     let tempProvider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(tempProvider);
 
-
     const signer = tempProvider.getSigner();
     setSigner(signer);
     console.log("Signer set successfully")
@@ -119,7 +118,7 @@ export default function Form(props) {
             <form onSubmit={sendPayment}>
             <FormControl mt={6}>
               <FormLabel>Enter the amount</FormLabel>
-              <Input type="number" id='sendamount'/>
+              <Input type="float" id='sendamount' required/>
               <Button width="full" mt={4} type="submit">
                 { sendBtnText }
               </Button>
