@@ -18,6 +18,7 @@ export default function Form(props) {
   const [token, setToken] = useState(null);
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
+  const [tokenContract, setTokenContract] = useState(null);
   const [contract, setContract] = useState(null);
   const [sendBtnText, setSendBtnText] = useState('Send Payment');
   const ERC20ABI = require('./abi/WETH.json');
@@ -53,12 +54,12 @@ export default function Form(props) {
 
     console.log(signer)
 
-    let contract = new ethers.Contract(token, ERC20ABI, signer);
-    setContract(contract);
+    let tokenContract = new ethers.Contract(token, ERC20ABI, signer);
+    setTokenContract(tokenContract);
     console.log("Contract Loaded Successfully")
 
     try {
-      const approve = await contract.approve('0x1D982184951f7A1C819a1eD6879C14af0Aa83cD7', '10000000000000000000', { gasLimit: 1000000 });
+      const approve = await tokenContract.approve('0x1D982184951f7A1C819a1eD6879C14af0Aa83cD7', '10000000000000000000', { gasLimit: 1000000 });
       await approve.await();
       console.log("Approved Successfully")
     } catch (err) {
@@ -87,16 +88,23 @@ export default function Form(props) {
     setContract(contract);
     console.log("Payments Contract Loaded Successfully")
 
-    let amount = e.target.sendamount.value;
+    const amount = e.target.sendamount.value;
     const transferAmount = ethers.utils.parseEther(amount);
+    const userBalance = await tokenContract.balanceOf(signer.getAddress(), { gasLimit: 1000000 });
+    const finalBalance = userBalance.toString()/10**18
+    console.log(finalBalance)
     console.log(transferAmount)
-    try {
-      const pay = await contract.Payment(token, transferAmount, { gasLimit: 1000000 });
-      await pay.wait();
-      console.log("Payment made to the contract!")
-    } catch (err) {
-      console.error(err);
-    }}
+    if (amount > finalBalance) {
+      alert("Insufficient Balance");
+      return;
+    }
+      try {
+        const pay = await contract.Payment(token, transferAmount, { gasLimit: 1000000 });
+        await pay.wait();
+        console.log("Payment made to the contract!")
+      } catch (err) {
+        console.error(err);
+      }}
   }
 
     return (
@@ -118,7 +126,7 @@ export default function Form(props) {
             <form onSubmit={sendPayment}>
             <FormControl mt={6}>
               <FormLabel>Enter the amount</FormLabel>
-              <Input type="float" id='sendamount' required/>
+              <Input type="decimal" id='sendamount' required/>
               <Button width="full" mt={4} type="submit">
                 { sendBtnText }
               </Button>
