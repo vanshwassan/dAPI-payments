@@ -36,7 +36,7 @@ This will deploy the Mock WETH and Mock WMATIC Contracts alongside the Payments 
 
 Import the mock token contract addresses in your Metamask account.
 
-## Using the Contract
+## Using the Payments Contract
 
 - To send a payment (2.5 Mock WETH and 2.5 Mock WMATIC). To edit these values, check `scripts/sendPayment.js`.
 
@@ -47,7 +47,7 @@ Import the mock token contract addresses in your Metamask account.
 $ yarn sendPayment
 ```
 
-- To check the receipt for the payment, use the NFT's tokenId. This returns the USD Evalue of how much the user paid:
+- To check the receipt for the payment, use the NFT's tokenId. This returns the USD value of how much the user paid:
 
 ```bash
 $ yarn checkReceipt
