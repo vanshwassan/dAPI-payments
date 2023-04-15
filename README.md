@@ -1,6 +1,8 @@
 # dAPI Payments Guide
 
-> A simple dApp to accept ERC20 token payments and mint an NFT receipt with the USD value to the user.
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+
+> A simple dApp to accept ERC20 token payments and mint an NFT receipt with the USD value to the user. This is a simple example of how dAPIs can be used in a real-world application.
 
 ## Installation
 
