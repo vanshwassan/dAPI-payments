@@ -16,10 +16,10 @@
   },
   "scripts": {
     "compile": "yarn hardhat compile",
-    "deploy": "yarn hardhat deploy --network mumbai",
-    "sendPayment": "yarn hardhat run scripts/sendPayment.js --network mumbai",
-    "checkReceipt": "yarn hardhat run scripts/checkReceipt.js --network mumbai",
-    "checkContractBalance": "yarn hardhat run scripts/checkContractBalance.js --network mumbai",
-    "withdraw": "yarn hardhat run scripts/withdrawFunds.js --network mumbai"
+    "deploy": "yarn hardhat deploy --network moonbase-alpha-testnet",
+    "sendPayment": "yarn hardhat run scripts/sendPayment.js --network moonbase-alpha-testnet",
+    "checkReceipt": "yarn hardhat run scripts/checkReceipt.js --network moonbase-alpha-testnet",
+    "checkContractBalance": "yarn hardhat run scripts/checkContractBalance.js --network moonbase-alpha-testnet",
+    "withdraw": "yarn hardhat run scripts/withdrawFunds.js --network moonbase-alpha-testnet"
   }
 }

@@ -31,8 +31,8 @@ function App() {
 
   const connectWalletHandler = () => {
     if (window.ethereum) {
-      if (window.ethereum.networkVersion !== '80001') {
-        alert('Please connect to Polygon Mumbai Testnet');
+      if (window.ethereum.networkVersion !== '1287') {
+        alert('Please connect to Moonbase-alpha Testnet');
         return;
       } else {
       window.ethereum

@@ -11,8 +11,6 @@ import {
 } from '@chakra-ui/react';
 
 import { ethers } from 'ethers';
-// import { WETHabi } from './abi/WETH.json';
-// import { WMATICabi } from './abi/WMATIC.json';
 
 export default function Form(props) {
   const [token, setToken] = useState(null);
@@ -31,17 +29,6 @@ export default function Form(props) {
     console.log(token)
     PaymentsHandler(token);
   }
-
-  // const setWeth = async => {
-  //   const token = "0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6";
-  //   console.log(token)
-  //   PaymentsHandler(token);
-  // }
-  // const setWmatic = async => {
-  //   const token = "0xf12Fd06B008739F18732F972782375DDBa1c3527";
-  //   PaymentsHandler(token);
-  // }
-
 
   const PaymentsHandler = async (token) => {
     console.log("Approving Payment");
@@ -119,7 +106,7 @@ export default function Form(props) {
               <FormLabel>Select token to pay</FormLabel>
               <Stack direction='row' spacing={4} align='center'>
               <Button colorScheme='blue' value={'0x45b68a86e5f4cfE1F5002aA1A528E367FEA3a7d6'} onClick={e => setTokenHandler(e, "value")}>WETH</Button>
-              <Button colorScheme='blue' value={'0xf12Fd06B008739F18732F972782375DDBa1c3527'} onClick={e => setTokenHandler(e, "value")}>WMATIC</Button>
+              <Button colorScheme='blue' value={'0xf12Fd06B008739F18732F972782375DDBa1c3527'} onClick={e => setTokenHandler(e, "value")}>WGLMR</Button>
               </Stack>
             </FormControl>
             </form>

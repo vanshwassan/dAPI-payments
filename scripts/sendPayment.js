@@ -11,18 +11,18 @@ async function main() {
   const WETH = await hre.deployments.get("WETH");
   const WETHAddress = WETH.address;
 
-  const WMATIC = await hre.deployments.get("WMATIC");
-  const WMATICAddress = WMATIC.address;
+  const WGLMR = await hre.deployments.get("WGLMR");
+  const WGLMRAddress = WGLMR.address;
 
 // Send 2.5 WETH
   const Pay = await paymentsContract.Payment(WETHAddress, '2500000000000000000');
   await Pay.wait();
   console.log("WETH Payment made!");
 
-// Send 2.5 WMATIC
-  const Pay2 = await paymentsContract.Payment(WMATICAddress, '2500000000000000000');
+// Send 2.5 WGLMR
+  const Pay2 = await paymentsContract.Payment(WGLMRAddress, '2500000000000000000');
   await Pay2.wait();
-  console.log("WMATIC Payment made!");
+  console.log("WGLMR Payment made!");
 
 }
   main()
