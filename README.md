@@ -34,13 +34,13 @@ $ yarn compile
 $ yarn deploy
 ```
 
-This will deploy the Mock WETH and Mock WMATIC Contracts alongside the Payments Contract. It will also set the dAPI proxy contract addresses mapped to their respective ERC20 tokens. Make sure to update them in the `deploy/3_deploy_Payments.js`.
+This will deploy the Mock WETH and Mock WGLMR Contracts alongside the Payments Contract. It will also set the dAPI proxy contract addresses mapped to their respective ERC20 tokens. Make sure to update them in the `deploy/3_deploy_Payments.js`.
 
 Import the mock token contract addresses in your Metamask account.
 
 ## Using the Payments Contract
 
-- To send a payment (2.5 Mock WETH and 2.5 Mock WMATIC). To edit these values, check `scripts/sendPayment.js`.
+- To send a payment (2.5 Mock WETH and 2.5 Mock WGLMR). To edit these values, check `scripts/sendPayment.js`.
 
     This also mints an NFT as a receipt for the payment(PRT Token). 
 
